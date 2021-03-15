@@ -76,17 +76,17 @@ class YoutubePlayerFlags {
 
   /// Copies new values assigned to the [YoutubePlayerFlags].
   YoutubePlayerFlags copyWith({
-    bool hideControls,
-    bool autoPlay,
-    bool mute,
-    bool showVideoProgressIndicator,
-    bool isLive,
-    bool hideThumbnail,
-    bool disableDragSeek,
-    bool loop,
-    bool enableCaption,
-    bool forceHD,
-    String captionLanguage,
+    bool? hideControls,
+    bool? autoPlay,
+    bool? mute,
+    bool? showVideoProgressIndicator,
+    bool? isLive,
+    bool? hideThumbnail,
+    bool? disableDragSeek,
+    bool? loop,
+    bool? enableCaption,
+    bool? forceHD,
+    String? captionLanguage,
   }) {
     return YoutubePlayerFlags(
       autoPlay: autoPlay ?? this.autoPlay,

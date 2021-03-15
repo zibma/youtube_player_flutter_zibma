@@ -27,7 +27,7 @@ class YoutubePlayerValue {
     this.volume = 100,
     this.playerState = PlayerState.unknown,
     this.playbackRate = PlaybackRate.normal,
-    this.playbackQuality,
+    this.playbackQuality = '',
     this.errorCode = 0,
     this.webViewController,
     this.toggleFullScreen = false,
@@ -72,10 +72,10 @@ class YoutubePlayerValue {
   final int errorCode;
 
   /// Reports error related toloading page resources.
-  final WebResourceError webResourceError;
+  final WebResourceError? webResourceError;
 
   /// Reports the [WebViewController].
-  final WebViewController webViewController;
+  final WebViewController? webViewController;
 
   /// Returns true is player has errors.
   bool get hasError => errorCode != 0 && webResourceError == null;
@@ -95,24 +95,24 @@ class YoutubePlayerValue {
   /// Creates new [YoutubePlayerValue] with assigned parameters and overrides
   /// the old one.
   YoutubePlayerValue copyWith({
-    bool isReady,
-    bool isControlsVisible,
-    bool isLoaded,
-    bool hasPlayed,
-    Duration position,
-    double buffered,
-    bool isPlaying,
-    bool isFullScreen,
-    double volume,
-    PlayerState playerState,
-    double playbackRate,
-    String playbackQuality,
-    int errorCode,
-    WebViewController webViewController,
-    bool toggleFullScreen,
-    bool isDragging,
-    YoutubeMetaData metaData,
-    WebResourceError webResourceError,
+    bool? isReady,
+    bool? isControlsVisible,
+    bool? isLoaded,
+    bool? hasPlayed,
+    Duration? position,
+    double? buffered,
+    bool? isPlaying,
+    bool? isFullScreen,
+    int volume = 10,
+    PlayerState? playerState,
+    double? playbackRate,
+    String? playbackQuality,
+    int? errorCode,
+    WebViewController? webViewController,
+    bool? toggleFullScreen,
+    bool? isDragging,
+    YoutubeMetaData? metaData,
+    WebResourceError? webResourceError,
   }) {
     return YoutubePlayerValue(
       isReady: isReady ?? this.isReady,
@@ -122,7 +122,7 @@ class YoutubePlayerValue {
       buffered: buffered ?? this.buffered,
       isPlaying: isPlaying ?? this.isPlaying,
       isFullScreen: isFullScreen ?? this.isFullScreen,
-      volume: volume ?? this.volume,
+      volume: volume,
       playerState: playerState ?? this.playerState,
       playbackRate: playbackRate ?? this.playbackRate,
       playbackQuality: playbackQuality ?? this.playbackQuality,
@@ -170,16 +170,18 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
 
   /// Creates [YoutubePlayerController].
   YoutubePlayerController({
-    @required this.initialVideoId,
+    required this.initialVideoId,
     this.flags = const YoutubePlayerFlags(),
   })  : assert(initialVideoId != null, 'initialVideoId can\'t be null.'),
         assert(flags != null),
         super(YoutubePlayerValue());
 
   /// Finds [YoutubePlayerController] in the provided context.
-  factory YoutubePlayerController.of(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()
-      ?.controller;
+  factory YoutubePlayerController.of(BuildContext context) => context.
+  dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()!.controller;
+  //
+  // factory YoutubePlayerController.of(BuildContext context)=>context.
+  //     dependOnInheritedWidgetOfExactType<InheritedYoutubePlayer>()!.controller!;
 
   _callMethod(String methodString) {
     if (value.isReady) {
@@ -220,7 +222,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   }
 
   void _updateValues(String id) {
-    if (id?.length != 11) {
+    if (id.length != 11) {
       updateValue(
         value.copyWith(
           errorCode: 1,
@@ -314,9 +316,9 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
 class InheritedYoutubePlayer extends InheritedWidget {
   /// Creates [InheritedYoutubePlayer]
   const InheritedYoutubePlayer({
-    Key key,
-    @required this.controller,
-    @required Widget child,
+    Key? key,
+    required this.controller,
+    required Widget child,
   })  : assert(controller != null),
         super(key: key, child: child);
 
