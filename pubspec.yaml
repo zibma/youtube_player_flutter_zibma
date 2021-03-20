@@ -9,10 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_media:
-    git:
-      url: https://github.com/zibma/webview_media_zibma.git
-      ref: main
+  webview_flutter: ^2.0.2
+#  webview_media:
+#    git:
+#      url: https://github.com/zibma/webview_media_zibma.git
+#      ref: main
 #  webview_media: '>=0.1.2 <1.0.0'
 
 dev_dependencies:

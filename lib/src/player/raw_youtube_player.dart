@@ -6,8 +6,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:webview_media/platform_interface.dart';
-import 'package:webview_media/webview_flutter.dart';
+import 'package:webview_flutter/platform_interface.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../enums/player_state.dart';
 import '../utils/youtube_meta_data.dart';
@@ -80,12 +80,13 @@ class _RawYoutubePlayerState extends State<RawYoutubePlayer>
       child: WebView(
         key: widget.key,
         userAgent: userAgent,
-        initialData: WebData(
-          data: player,
-          baseUrl: 'https://www.youtube.com',
-          encoding: 'utf-8',
-          mimeType: 'text/html',
-        ),
+        initialUrl: 'https://www.youtube.com',
+        // initialData: WebData(
+        //   data: player,
+        //   baseUrl: 'https://www.youtube.com',
+        //   encoding: 'utf-8',
+        //   mimeType: 'text/html',
+        // ),
         onWebResourceError: (WebResourceError error) {
           controller!
               .updateValue(controller!.value.copyWith(webResourceError: error));
