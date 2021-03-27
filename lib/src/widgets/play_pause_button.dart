@@ -27,8 +27,8 @@ class PlayPauseButton extends StatefulWidget {
 
 class _PlayPauseButtonState extends State<PlayPauseButton>
     with TickerProviderStateMixin {
-  YoutubePlayerController? _controller;
-  AnimationController? _animController;
+  late YoutubePlayerController _controller;
+  late AnimationController _animController;
 
   @override
   void initState() {
@@ -36,57 +36,59 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
     _animController = AnimationController(
       vsync: this,
       value: 0,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller = YoutubePlayerController.of(context);
-    if (_controller == null) {
+    final controller = YoutubePlayerController.of(context);
+    if (controller == null) {
       assert(
         widget.controller != null,
         '\n\nNo controller could be found in the provided context.\n\n'
         'Try passing the controller explicitly.',
       );
-      _controller = widget.controller;
+      _controller = widget.controller!;
+    } else {
+      _controller = controller;
     }
-    _controller!.removeListener(_playPauseListener);
-    _controller!.addListener(_playPauseListener);
+    _controller.removeListener(_playPauseListener);
+    _controller.addListener(_playPauseListener);
   }
 
   @override
   void dispose() {
-    _controller!.removeListener(_playPauseListener);
-    _animController!.dispose();
+    _controller.removeListener(_playPauseListener);
+    _animController.dispose();
     super.dispose();
   }
 
-  void _playPauseListener() => _controller!.value.isPlaying
-      ? _animController!.forward()
-      : _animController!.reverse();
+  void _playPauseListener() => _controller.value.isPlaying
+      ? _animController.forward()
+      : _animController.reverse();
 
   @override
   Widget build(BuildContext context) {
-    final _playerState = _controller!.value.playerState;
-    if ((!_controller!.flags.autoPlay && _controller!.value.isReady) ||
+    final _playerState = _controller.value.playerState;
+    if ((!_controller.flags.autoPlay && _controller.value.isReady) ||
         _playerState == PlayerState.playing ||
         _playerState == PlayerState.paused) {
       return Visibility(
         visible: _playerState == PlayerState.cued ||
-            !_controller!.value.isPlaying ||
-            _controller!.value.isControlsVisible,
+            !_controller.value.isPlaying ||
+            _controller.value.isControlsVisible,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(50.0),
-            onTap: () => _controller!.value.isPlaying
-                ? _controller!.pause()
-                : _controller!.play(),
+            onTap: () => _controller.value.isPlaying
+                ? _controller.pause()
+                : _controller.play(),
             child: AnimatedIcon(
               icon: AnimatedIcons.play_pause,
-              progress: _animController!.view,
+              progress: _animController.view,
               color: Colors.white,
               size: 60.0,
             ),
@@ -94,11 +96,12 @@ class _PlayPauseButtonState extends State<PlayPauseButton>
         ),
       );
     }
+    if (_controller.value.hasError) return const SizedBox();
     return widget.bufferIndicator ??
         Container(
           width: 70.0,
           height: 70.0,
-          child: CircularProgressIndicator(
+          child: const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation(Colors.white),
           ),
         );

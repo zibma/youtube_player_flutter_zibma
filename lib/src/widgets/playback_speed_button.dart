@@ -26,28 +26,30 @@ class PlaybackSpeedButton extends StatefulWidget {
 }
 
 class _PlaybackSpeedButtonState extends State<PlaybackSpeedButton> {
-  YoutubePlayerController? _controller;
+  late YoutubePlayerController _controller;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller = YoutubePlayerController.of(context);
-    if (_controller == null) {
+    final controller = YoutubePlayerController.of(context);
+    if (controller == null) {
       assert(
         widget.controller != null,
         '\n\nNo controller could be found in the provided context.\n\n'
         'Try passing the controller explicitly.',
       );
-      _controller = widget.controller;
+      _controller = widget.controller!;
+    } else {
+      _controller = controller;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<double>(
-      onSelected: _controller!.setPlaybackRate,
+      onSelected: _controller.setPlaybackRate,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 8.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 8.0),
         child: widget.icon ??
             Image.asset(
               'assets/speedometer.webp',
@@ -71,9 +73,9 @@ class _PlaybackSpeedButtonState extends State<PlaybackSpeedButton> {
     );
   }
 
-  _popUpItem(String text, double rate) {
+  PopupMenuEntry<double> _popUpItem(String text, double rate) {
     return CheckedPopupMenuItem(
-      checked: _controller!.value.playbackRate == rate,
+      checked: _controller.value.playbackRate == rate,
       child: Text(text),
       value: rate,
     );
